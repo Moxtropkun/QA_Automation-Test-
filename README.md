@@ -20,7 +20,9 @@ La estructura está diseñada para separar responsabilidades y facilitar la ejec
 ├── AI_USAGE.md          # Bitácora de co-pilotaje e IA
 └── package.json         # Gestión de dependencias y scripts
 
-*Estrategia de Pruebas*
+
+
+### *Estrategia de Pruebas*
 Capa Móvil: Implementación de Page Object Model (POM) para centralizar los selectores y mejorar la reutilización del código. Priorización de accessibilityId y resource-id para garantizar la estabilidad de los scripts ante cambios en la interfaz.
 
 Capa API: Validación de contratos, códigos de respuesta y tiempos de latencia.
