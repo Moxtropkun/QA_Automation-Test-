@@ -9,7 +9,7 @@ Este repositorio contiene el framework de automatización para la validación de
 La estructura está diseñada para separar responsabilidades y facilitar la ejecución independiente de las suites de prueba:
 
 
-Plaintext
+```Plaintext
 /QA_Movile_test
 ├── api-tests/           # Pruebas de integración de servicios (Playwright)
 ├── test_Apk/            # Suite de pruebas móviles (WebdriverIO + Appium)
