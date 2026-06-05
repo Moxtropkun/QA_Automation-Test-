@@ -85,21 +85,54 @@ appium doctor
 java -version
 
 
-Comandos principales
+*Comandos principales*
+1. **Instalación:**
 
-Instalación de dependencias:
-
+Bash
 npm install
 
+2. **Ejecución Móvil:**
+   ```bash
+ 
+```bash
+1. primero instalamos las dependencias de WDIO con el sigueinte comando 
 
-Ejecución Móvil:
+npm install @wdio/cli @wdio/local-runner @wdio/mocha-framework @wdio/spec-reporter @wdio/appium-service appium webdriverio ts-node typescript --save-dev
 
-npm run test:mobile
+$ npx appium driver install uiautomator2
+$ npm install @wdio/allure-reporter --save-dev
 
 
-Ejecución API:
 
-npm run test:api
+# Sintaxis: npx wdio [archivo_configuración] --spec [ruta_del_archivo_de_prueba]
+
+Ejemplo: npx wdio wdio.conf.ts ./test_Apk/specs/fullFlow.ts
+
+una vez ejecutado este comando WDIO, si es la primera vez  abrira su panel de configuracion se debe dejar la siguiente configuracion
+
+√ A project named "api_test" was detected at
+√ Do you want to use page objects
+(https://martinfowler.com/bliki/PageObject.html)? Yes
+√ Where are your page objects located? y
+√ Which reporter do you want to use? spec, allure
+√ Do you want to add a plugin to your test setup?
+√ Would you like to include Visual Testing to your setup? For more information
+see https://webdriver.io/docs/visual-testing No
+√ Do you want to add a service to your test setup? appium
+√ Do you want me to run `npm install` Yes
+
+
+
+Volvemos a lanzar el comando y Test debera iniciarse
+
+Ejemplo: npx wdio wdio.conf.ts ./test_Apk/specs/fullFlow.ts
+
+
+3. **Ejecución API:**
+   ```bash
+ 
+```bash
+Ejemplo: npx playwright test Api_Test/tests/api.spec.ts --config Api_Test/playwright.config.ts
 
 
 ⚠️ Troubleshooting
