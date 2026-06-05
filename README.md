@@ -25,64 +25,87 @@ La estructura está diseñada para separar responsabilidades y facilitar la ejec
 *Estrategia de Pruebas*
 Capa Móvil: Implementación de Page Object Model (POM) para centralizar los selectores y mejorar la reutilización del código. Priorización de accessibilityId y resource-id para garantizar la estabilidad de los scripts ante cambios en la interfaz.
 
-Capa API: Validación de contratos, códigos de respuesta y tiempos de latencia.
+🛠️ Stack Tecnológico
 
-Gestión de Dependencias: Uso de Node.js con TypeScript para garantizar tipado estricto en la automatización.
+Mobile Test: Appium, TypeScript, Page Object Model.
 
-*stack tecnologico*
-   1. Mobile Test 
-      -Appium
-      -TypeScript
-      -Page Objetc Model
+API Test: Playwright (Web API Testing), TypeScript.
 
-   2. API Test 
-      -Appium
-      -TypeScript
-      
-   3. Reportes  
-      -Allure
-   
-   4. IA Asistentes  
-      -Google Gemini
-      -Open IA Chat GpT
-   
+Reportes: Allure Reports.
 
+IA Asistentes: Google Gemini, OpenAI ChatGPT.
 
-*Configuración y Ejecución*
+⚙️ Configuración y Ejecución
+
 Prerrequisitos
 
-*Node.js (v18 o superior)
-*Java Development Kit (JDK) 11+
-*Android SDK (con emulador y variables de entorno HOME configurados)
-   -Se emula telefono google pixel 7(normal), con verison de sistema Android 14.
+Node.js (v18 o superior)
 
-   1. Variables: 
-   Nombre:"ANDROID_HOME"  
-   Valor:"Usuario xxx\AppData\Local\Android\Sdk"
+Java Development Kit (JDK 25)
 
-   Nombre:"JAVA_HOME"  
-   Valor:"C:\Program Files\Eclipse Adoptium\"version instalada..."
+Android SDK (Emulador: Google Pixel 7, Android 14)
 
-   NOTA: a la variable Path se agregan los sientes valores Nombre:"Path"  
-   Valor:"%ANDROID_HOME%\platform-tools"
-   Valor:"%ANDROID_HOME%\emulator"
-   Valor:"%ANDROID_HOME%\tools"
-   Valor:"%ANDROID_HOME%\cmdline-tools\latest\bin"
-   Valor:"%JAVA_HOME%\bin"
+Variables de Entorno
 
-*Appium Server
-*Appium doctor
+Para el correcto funcionamiento, configura las siguientes variables en tu Sistema Operativo:
 
-*Comandos principales*
-1. **Instalación:**
+```Variable
 
-Bash
+Valor sugerido / Ejemplo
+
+ANDROID_HOME
+
+C:\Users\<USER>\AppData\Local\Android\Sdk
+
+JAVA_HOME
+
+C:\Program Files\Eclipse Adoptium\jdk-25.0.3.9-hotspot
+
+Configuración del Path:
+Debes agregar los siguientes binarios a tu variable de sistema Path:
+
+%ANDROID_HOME%\platform-tools
+
+%ANDROID_HOME%\emulator
+
+%ANDROID_HOME%\tools
+
+%ANDROID_HOME%\cmdline-tools\latest\bin
+
+%JAVA_HOME%\bin
+
+Verificación de Entorno
+
+Antes de ejecutar, asegúrate de que tus herramientas estén correctamente configuradas ejecutando:
+
+# Verificar Appium
+appium doctor
+
+# Verificar Java
+java -version
+
+
+Comandos principales
+
+Instalación de dependencias:
+
 npm install
 
-2. **Ejecución Móvil:**
-   ```bash
-   npm run test:mobile
+
+Ejecución Móvil:
+
+npm run test:mobile
+
+
 Ejecución API:
 
-Bash
 npm run test:api
+
+
+⚠️ Troubleshooting
+
+Si al ejecutar los tests móviles recibes errores de "Device Not Found" o "Java not found":
+
+Verifica que el emulador esté activo y en modo adb devices.
+
+Asegúrate de que las variables de entorno (JAVA_HOME, ANDROID_HOME) fueron aplicadas reiniciando la terminal de VS Code.
