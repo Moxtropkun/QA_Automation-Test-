@@ -8,8 +8,8 @@ Este repositorio contiene el framework de automatización para la validación de
 📂 Arquitectura del Proyecto
 La estructura está diseñada para separar responsabilidades y facilitar la ejecución independiente de las suites de prueba:
 
-Plaintext
 
+Plaintext
 /QA_Movile_test
 ├── api-tests/           # Pruebas de integración de servicios (Playwright)
 ├── test_Apk/            # Suite de pruebas móviles (WebdriverIO + Appium)
@@ -19,7 +19,6 @@ Plaintext
 ├── README.md            # Guía del proyecto
 ├── AI_USAGE.md          # Bitácora de co-pilotaje e IA
 └── package.json         # Gestión de dependencias y scripts
-
 
 *Estrategia de Pruebas*
 Capa Móvil: Implementación de Page Object Model (POM) para centralizar los selectores y mejorar la reutilización del código. Priorización de accessibilityId y resource-id para garantizar la estabilidad de los scripts ante cambios en la interfaz.
