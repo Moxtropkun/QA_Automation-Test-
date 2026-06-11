@@ -145,7 +145,7 @@ test.describe('Booking API Automation', () => {
         const bookingId =
             bookingBody.bookingid;
 
-        /
+        
         const updateResponse =
             await request.put(
                 `${BASE_URL}/booking/${bookingId}`,
