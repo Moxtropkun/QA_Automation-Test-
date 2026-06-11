@@ -59,3 +59,13 @@ con fin de identificar los selecctores correspondientes y desbloquearme, gracias
 ----------------------------------------------------------------------------------------------------------------------------------------------
 
 por ultimo me oriento a como se puede emplear kafka para el objetivo final de la prueba me ayudó a realizar el ultimo punto sobre kafka siendo una herramineta que nunca he usado.
+
+como por ejemplo:
+
+**Promt 4.** Estoy el docker compose para ejecutar kafka pero al momento de ejecutar el comando docker compose -up me genera este error:
+![Error Docker](./Evidencias/image.png)
+
+
+
+gracias a ello pude identificar que docker no podia descargar la imagen de kafka por problemas del DNS.
+![Contenedor arriba](./Evidencias/image-1.png)

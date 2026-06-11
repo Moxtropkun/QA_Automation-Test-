@@ -28,10 +28,10 @@ QA_Automation-Test
 │
 ├── Api_Test
 │   ├── tests
-│   │   └── api.spec.ts                # Pruebas de integración de servicios 
+│   │   └── api.spec.ts                
 │   └── playwright.config.ts
 │
-├── test_Apk                           # Pruebas móviles (WebdriverIO + Appium)
+├── test_Apk                           
 │   ├── pageobjects
 │   │   ├── BasePage.ts
 │   │   ├── LoginPage.ts
@@ -47,7 +47,11 @@ QA_Automation-Test
 │       ├── InvalidLogin.ts
 │       ├── fullFlow.ts
 │       └── checkoutTreeProducts.ts
-│
+├── Kafka_Test
+│   ├── consumer.ts
+│   ├──producer.ts              
+│   └── kakfa.spec.ts
+├── docker-compose.yml
 ├── Evidencias
 ├── DemoApp.apk
 ├── README.md
@@ -78,7 +82,9 @@ Gestión de Dependencias: Uso de Node.js con TypeScript para garantizar tipado e
       -Google Gemini
       -Open IA Chat GpT
    
-
+   5. Kafka test  
+      -Docker desktop
+      
 
 *Configuración y Ejecución*
 Prerrequisitos
@@ -118,10 +124,17 @@ npx appium driver install uiautomator2
 Instalamos allure reporter:
 npm install @wdio/allure-reporter --save-dev
 
+Instalamos kafkaJs:
+npm install kafkajs
+
+Instalamos wsl:
+wsl --install
+
 
 Verificamos que se este ejecuando el emulador
 adb devices
 *se deben listar dispositivos activos*
+
 
 2. **Ejecución Móvil:**
    ```bash
@@ -137,8 +150,7 @@ npx wdio wdio.conf.ts --spec ./test_Apk/specs/fullFlow.ts
 
 
 
-
-2. **Ejecución API:**
+3. **Ejecución API:**
    ```bash
  
  ## Para ejecutar la prueba de api nos ubicamos en la carpeta raiz y ejecutamos la prueba con el sigueinte comando 
@@ -146,6 +158,26 @@ npx wdio wdio.conf.ts --spec ./test_Apk/specs/fullFlow.ts
 ```bash
 Ejemplo: npx playwright test Api_Test/tests/api.spec.ts --config Api_Test/playwright.config.ts
 
+
+
+4. **Ejecución prueba Kafka:**
+   ```bash
+   
+## Para ejecutar la prueba de kafka abrimos la primera levantamos los contenemdores del docker con el siguiente comando:
+docker compose -up
+
+ ## En la primera terminal y ejecutamos el comando
+npx ts-node Kafka_Test/consumer.ts
+
+ ## En la segunda terminal y ejecutamos el comando
+npx ts-node Kafka_Test/producer.ts
+
+
+Se automatizó el proceso con playwright y se lanzara con el siguiente comando
+npx playwright test Kafka_Test/kafka.spec.ts
+
+```bash
+el primero escuchara y esperará los datos enviados de la segunda terminal
 
 Extras:
 
