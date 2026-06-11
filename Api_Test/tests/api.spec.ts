@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 import Ajv from 'ajv';
-import * as http from 'http';
 
 const ajv = new Ajv();
+
+const BASE_URL = 'https://restful-booker.herokuapp.com';
 
 const bookingSchema = {
     type: 'object',
@@ -24,34 +25,108 @@ const bookingSchema = {
                     required: ['checkin', 'checkout']
                 }
             },
-            required: ['firstname', 'lastname', 'totalprice', 'depositpaid', 'bookingdates']
+            required: [
+                'firstname',
+                'lastname',
+                'totalprice',
+                'depositpaid',
+                'bookingdates'
+            ]
         }
     },
     required: ['bookingid', 'booking']
 };
 
-test.describe('Creacion de serva automatizada ', () => {
-    let server: http.Server;
-    const PORT = 3001;
-    const BASE_URL = `http://localhost:${PORT}`;
-    
-    let token: string;
-    let bookingId: number;
+test.describe('Booking API Automation', () => {
 
+    test('Generar token de autenticación', async ({ request }) => {
 
-    test.beforeAll(async () => {
-        server = http.createServer((req, res) => {
-            res.setHeader('Content-Type', 'application/json');
+        const response = await request.post(
+            `${BASE_URL}/auth`,
+            {
+                data: {
+                    username: 'admin',
+                    password: 'password123'
+                }
+            }
+        );
 
-            if (req.url === '/auth' && req.method === 'POST') {
-                res.writeHead(200);
-                res.end(JSON.stringify({ token: 'QpwL5tke4Pnpja7X4' }));
-            } 
-            else if (req.url === '/booking' && req.method === 'POST') {
-                res.writeHead(200);
-                res.end(JSON.stringify({
-                    bookingid: 4242,
-                    booking: {
+        expect(response.status()).toBe(200);
+
+        const body = await response.json();
+
+        console.log('TOKEN:', body);
+
+        expect(body).toHaveProperty('token');
+        expect(body.token).toBeTruthy();
+    });
+
+    test('Crear nueva reserva y validar schema', async ({ request }) => {
+
+        const response = await request.post(
+            `${BASE_URL}/booking`,
+            {
+                data: {
+                    firstname: 'Jose',
+                    lastname: 'Monsalve',
+                    totalprice: 150000,
+                    depositpaid: true,
+                    bookingdates: {
+                        checkin: '2026-12-01',
+                        checkout: '2026-12-02'
+                    }
+                }
+            }
+        );
+
+        expect(response.status()).toBe(200);
+
+        const body = await response.json();
+
+        console.log(
+            'BOOKING CREATED:',
+            JSON.stringify(body, null, 2)
+        );
+
+        expect(
+            body.booking.firstname
+        ).toBe('Jose');
+
+        const schemaValidation =
+            ajv.validate(
+                bookingSchema,
+                body
+            );
+
+        expect(schemaValidation).toBe(true);
+    });
+
+    test('Actualizar una reserva existente', async ({ request }) => {
+
+     
+        const authResponse =
+            await request.post(
+                `${BASE_URL}/auth`,
+                {
+                    data: {
+                        username: 'admin',
+                        password: 'password123'
+                    }
+                }
+            );
+
+        const authBody =
+            await authResponse.json();
+
+        const token =
+            authBody.token;
+
+        
+        const bookingResponse =
+            await request.post(
+                `${BASE_URL}/booking`,
+                {
+                    data: {
                         firstname: 'Jose',
                         lastname: 'Monsalve',
                         totalprice: 150000,
@@ -61,114 +136,69 @@ test.describe('Creacion de serva automatizada ', () => {
                             checkout: '2026-12-02'
                         }
                     }
-                }));
-            } 
-            else if (req.url === '/booking/4242' && req.method === 'PUT') {
-                res.writeHead(200);
-                res.end(JSON.stringify({
-                    firstname: 'Jose Sebastian',
-                    lastname: 'Monsalve',
-                    totalprice: 180000,
-                    depositpaid: true,
-                    bookingdates: {
-                        checkin: '2026-12-01',
-                        checkout: '2026-12-02'
-                    },
-                    additionalneeds: 'Sabanas y toahallas extra'
-                }));
-            } else {
-                res.writeHead(404);
-                res.end(JSON.stringify({ error: 'Not Found' }));
-            }
-        });
-
-        await new Promise<void>((resolve) => server.listen(PORT, resolve));
-    });
-
-    test.afterAll(async () => {
-        await new Promise<void>((resolve) => server.close(() => resolve()));
-    });
-
-    test('captura del token', async ({ request }) => {
-        const response = await request.post(`${BASE_URL}/auth`, {
-            data: {
-                username: 'admin',
-                password: 'password123'
-            }
-        });
-
-        expect(response.ok()).toBeTruthy();
-        const body = await response.json();
-        
-        console.log('=== AUTH TOKEN GENERADO ===');
-        console.log(body);
-        console.log('===========================\n');
-
-        expect(body).toHaveProperty('token');
-        token = body.token;
-    });
-
-    test('Creamdo una nueva reservacion', async ({ request }) => {
-        const response = await request.post(`${BASE_URL}/booking`, {
-            data: {
-                firstname: 'Jose',
-                lastname: 'Monsalve',
-                totalprice: 150000,
-                depositpaid: true,
-                bookingdates: {
-                    checkin: '2026-12-01',
-                    checkout: '2026-12-02'
                 }
-            }
-        });
+            );
 
-        expect(response.status()).toBe(200);
-        const body = await response.json();
-        
-        console.log('=== RESERVA CREADA (POST) ===');
-        console.log(JSON.stringify(body, null, 2));
-        console.log('=============================\n');
+        const bookingBody =
+            await bookingResponse.json();
 
-        expect(body.booking.firstname).toBe('Jose');
-        
-        const isSchemaValid = ajv.validate(bookingSchema, body);
-        expect(isSchemaValid).toBe(true);
+        const bookingId =
+            bookingBody.bookingid;
 
-        bookingId = body.bookingid;
-    });
+        /
+        const updateResponse =
+            await request.put(
+                `${BASE_URL}/booking/${bookingId}`,
+                {
+                    headers: {
+                        Cookie: `token=${token}`,
+                        Accept: 'application/json',
+                        'Content-Type':
+                            'application/json'
+                    },
+                    data: {
+                        firstname:
+                            'Jose Sebastian',
+                        lastname:
+                            'Monsalve',
+                        totalprice:
+                            180000,
+                        depositpaid:
+                            true,
+                        bookingdates: {
+                            checkin:
+                                '2026-12-01',
+                            checkout:
+                                '2026-12-02'
+                        },
+                        additionalneeds:
+                            'Sabanas y toallas extra'
+                    }
+                }
+            );
 
-    test('actualizacion de la reserva', async ({ request }) => {
-        const targetId = bookingId || 4242;
+        expect(
+            updateResponse.ok()
+        ).toBeTruthy();
 
-        const response = await request.put(`${BASE_URL}/booking/${targetId}`, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Cookie': `token=${token || 'QpwL5tke4Pnpja7X4'}`
-            },
-            data: {
-                firstname: 'Jose Sebastian',
-                lastname: 'Monsalve',
-                totalprice: 180000,
-                depositpaid: true,
-                bookingdates: {
-                    checkin: '2026-12-01',
-                    checkout: '2026-12-02'
-                },
-                additionalneeds: 'Sabanas y toahallas extra'
-            }
-        });
+        const updatedBody =
+            await updateResponse.json();
 
-        expect(response.ok()).toBeTruthy();
-        const body = await response.json();
-        
-        console.log('=== RESERVA ACTUALIZADA (PUT) ===');
-        console.log(JSON.stringify(body, null, 2));
-        console.log('=================================\n');
+        console.log(
+            'UPDATED BOOKING:',
+            JSON.stringify(
+                updatedBody,
+                null,
+                2
+            )
+        );
 
-        expect(body).toMatchObject({
-            firstname: 'Jose Sebastian',
-            additionalneeds: 'Sabanas y toahallas extra'
-        });
+        expect(updatedBody)
+            .toMatchObject({
+                firstname:
+                    'Jose Sebastian',
+                additionalneeds:
+                    'Sabanas y toallas extra'
+            });
     });
 });

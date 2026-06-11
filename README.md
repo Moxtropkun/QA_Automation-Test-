@@ -3,142 +3,157 @@ Prueba técnica de automatización de pruebas QA
 
 
 Proyecto: Automatización de Pruebas 
-Este repositorio contiene el framework de automatización para la validación de calidad de la aplicacion: SauceLabs My Demo App. La solución aborda tanto la capa de servicios (API) como la capa móvil (Android), aplicando estándares de ingeniería de software para asegurar mantenibilidad y escalabilidad.
+Este repositorio contiene el framework de automatización para la validación de calidad de la aplicación: SauceLabs My Demo App. La solución aborda tanto la capa de servicios (API) como la capa móvil (Android), aplicando estándares de ingeniería de software para asegurar mantenibilidad y escalabilidad.
 
 📂 Arquitectura del Proyecto
 La estructura está diseñada para separar responsabilidades y facilitar la ejecución independiente de las suites de prueba:
 
+Objetivos
+
+Validar los siguientes componentes:
+
+Mobile Testing:
+*Login exitoso.
+*Login inválido.
+*Flujo completo de compra.
+*Compra de múltiples productos.
+
+API Testing:
+*Generación de token.
+*Creación de reserva.
+*Actualización de reserva.
 
 ```Plaintext
-/QA_Movile_test
-├── api-tests/           # Pruebas de integración de servicios (Playwright)
-├── test_Apk/            # Suite de pruebas móviles (WebdriverIO + Appium)
-│   ├── pageobjects/     # Patrón Page Object Model (POM)
-│   └── specs/           # Casos de prueba automatizados
-├── .gitignore           # Exclusión de archivos binarios y temporales
-├── README.md            # Guía del proyecto
-├── AI_USAGE.md          # Bitácora de co-pilotaje e IA
-├── package.json         # Gestión de dependencias y scripts
-└── Evicencias           # Evidencias de ejecucion de los test y reportes
+QA_Automation-Test
+│
+├── Api_Test
+│   ├── tests
+│   │   └── api.spec.ts                # Pruebas de integración de servicios 
+│   └── playwright.config.ts
+│
+├── test_Apk                           # Pruebas móviles (WebdriverIO + Appium)
+│   ├── pageobjects
+│   │   ├── BasePage.ts
+│   │   ├── LoginPage.ts
+│   │   ├── ProductsPage.ts
+│   │   ├── CartPage.ts
+│   │   ├── MenuPage.ts
+│   │   ├── CheckoutShippingPage.ts
+│   │   ├── CheckoutPaymentPage.ts
+│   │   └── CheckoutReviewPage.ts
+│   │
+│   └── specs
+│       ├── login.ts
+│       ├── InvalidLogin.ts
+│       ├── fullFlow.ts
+│       └── checkoutTreeProducts.ts
+│
+├── Evidencias
+├── DemoApp.apk
+├── README.md
+└── AI_USAGE.MD
 
 
 *Estrategia de Pruebas*
 Capa Móvil: Implementación de Page Object Model (POM) para centralizar los selectores y mejorar la reutilización del código. Priorización de accessibilityId y resource-id para garantizar la estabilidad de los scripts ante cambios en la interfaz.
 
-🛠️ Stack Tecnológico
+Capa API: Validación de contratos, códigos de respuesta y tiempos de latencia.
 
-Mobile Test: Appium, TypeScript, Page Object Model.
+Gestión de Dependencias: Uso de Node.js con TypeScript para garantizar tipado estricto en la automatización.
 
-API Test: Playwright (Web API Testing), TypeScript.
+*stack tecnologico*
+   1. Mobile Test 
+      -Appium
+      -TypeScript
+      -Page Objetc Model
 
-Reportes: Allure Reports.
+   2. API Test 
+      -Playwright
+      -TypeScript
+      
+   3. Reportes  
+      -Allure
+   
+   4. IA Asistentes  
+      -Google Gemini
+      -Open IA Chat GpT
+   
 
-IA Asistentes: Google Gemini, OpenAI ChatGPT.
 
-⚙️ Configuración y Ejecución
-
+*Configuración y Ejecución*
 Prerrequisitos
 
-Node.js (v18 o superior)
+*Node.js (v18 o superior)
+*Java Development Kit (JDK) 11+
+*Android SDK (con emulador y variables de entorno HOME configurados)
+   -Se emula telefono google pixel 7(normal), con verison de sistema Android 14.
 
-Java Development Kit (JDK 25)
+   1. Variables: 
+   Nombre:"ANDROID_HOME"  
+   Valor:"Usuario xxx\AppData\Local\Android\Sdk"
 
-Android SDK (Emulador: Google Pixel 7, Android 14)
+   Nombre:"JAVA_HOME"  
+   Valor:"C:\Program Files\Eclipse Adoptium\"version instalada..."
 
-Variables de Entorno
+   NOTA: a la variable Path se agregan los sientes valores Nombre:"Path"  
+   Valor:"%ANDROID_HOME%\platform-tools"
+   Valor:"%ANDROID_HOME%\emulator"
+   Valor:"%ANDROID_HOME%\tools"
+   Valor:"%ANDROID_HOME%\cmdline-tools\latest\bin"
+   Valor:"%JAVA_HOME%\bin"
 
-Para el correcto funcionamiento, configura las siguientes variables en tu Sistema Operativo:
-
-```Variable
-
-Valor sugerido / Ejemplo
-
-ANDROID_HOME
-
-C:\Users\<USER>\AppData\Local\Android\Sdk
-
-JAVA_HOME
-
-C:\Program Files\Eclipse Adoptium\jdk-25.0.3.9-hotspot
-
-Configuración del Path:
-Debes agregar los siguientes binarios a tu variable de sistema Path:
-
-%ANDROID_HOME%\platform-tools
-
-%ANDROID_HOME%\emulator
-
-%ANDROID_HOME%\tools
-
-%ANDROID_HOME%\cmdline-tools\latest\bin
-
-%JAVA_HOME%\bin
-
-Verificación de Entorno
-
-Antes de ejecutar, asegúrate de que tus herramientas estén correctamente configuradas ejecutando:
-
-# Verificar Appium
-appium doctor
-
-# Verificar Java
-java -version
-
+*Appium Server
+*Appium doctor
 
 *Comandos principales*
+
 1. **Instalación:**
 
 Bash
 npm install
 
+Instalamos Driver android:
+npx appium driver install uiautomator2
+
+Instalamos allure reporter:
+npm install @wdio/allure-reporter --save-dev
+
+
+Verificamos que se este ejecuando el emulador
+adb devices
+*se deben listar dispositivos activos*
+
 2. **Ejecución Móvil:**
    ```bash
  
-```bash
-1. primero instalamos las dependencias de WDIO con el sigueinte comando 
 
-npm install @wdio/cli @wdio/local-runner @wdio/mocha-framework @wdio/spec-reporter @wdio/appium-service appium webdriverio ts-node typescript --save-dev
+## Para ejecutar las pruebas moviles nos ubicamos en la carpeta raiz y ejecutamos la prueba correspondiente con la sigueinte sintaxis
 
-$ npx appium driver install uiautomator2
-$ npm install @wdio/allure-reporter --save-dev
+npx wdio [archivo_configuración] --spec [ruta_del_archivo_de_prueba]
 
+por ejemplo para el flujo completo seria:
 
-
-# Sintaxis: npx wdio [archivo_configuración] --spec [ruta_del_archivo_de_prueba]
-
-Ejemplo: npx wdio wdio.conf.ts ./test_Apk/specs/fullFlow.ts
-
-una vez ejecutado este comando WDIO, si es la primera vez  abrira su panel de configuracion se debe dejar la siguiente configuracion
-
-√ A project named "api_test" was detected at
-√ Do you want to use page objects
-(https://martinfowler.com/bliki/PageObject.html)? Yes
-√ Where are your page objects located? y
-√ Which reporter do you want to use? spec, allure
-√ Do you want to add a plugin to your test setup?
-√ Would you like to include Visual Testing to your setup? For more information
-see https://webdriver.io/docs/visual-testing No
-√ Do you want to add a service to your test setup? appium
-√ Do you want me to run `npm install` Yes
+npx wdio wdio.conf.ts --spec ./test_Apk/specs/fullFlow.ts
 
 
 
-Volvemos a lanzar el comando y Test debera iniciarse
 
-Ejemplo: npx wdio wdio.conf.ts ./test_Apk/specs/fullFlow.ts
-
-
-3. **Ejecución API:**
+2. **Ejecución API:**
    ```bash
  
+ ## Para ejecutar la prueba de api nos ubicamos en la carpeta raiz y ejecutamos la prueba con el sigueinte comando 
+
 ```bash
 Ejemplo: npx playwright test Api_Test/tests/api.spec.ts --config Api_Test/playwright.config.ts
 
 
-⚠️ Troubleshooting
+Extras:
 
-Si al ejecutar los tests móviles recibes errores de "Device Not Found" o "Java not found":
+Si al momento de ejecutar existe alun problema de instacion de depencias de appium o algun componente los compandos serian los siguientes:
 
-Verifica que el emulador esté activo y en modo adb devices.
+Wdio y appium dependencias completas:
+npm install @wdio/cli @wdio/local-runner @wdio/mocha-framework @wdio/spec-reporter @wdio/appium-service appium webdriverio ts-node typescript --save-dev
 
-Asegúrate de que las variables de entorno (JAVA_HOME, ANDROID_HOME) fueron aplicadas reiniciando la terminal de VS Code.
+
+
+Volvemos a lanzar el comando y Test debera iniciarse
