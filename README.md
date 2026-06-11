@@ -156,7 +156,7 @@ npx wdio wdio.conf.ts --spec ./test_Apk/specs/fullFlow.ts
  ## Para ejecutar la prueba de api nos ubicamos en la carpeta raiz y ejecutamos la prueba con el sigueinte comando 
 
 ```bash
-Ejemplo: npx playwright test Api_Test/tests/api.spec.ts --config Api_Test/playwright.config.ts
+Ejemplo: npx playwright test Api_Test/tests/api.spec.ts 
 
 
 
